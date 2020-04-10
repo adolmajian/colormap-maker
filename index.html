@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Colormap Maker</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.0.6/chroma.min.js"
+            integrity="sha256-EPpkhj7mJAHBUK2SGtSujMVYEi7Q8kIudhB895gTynI=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
+          integrity="sha256-2YQRJMXD7pIAPHiXr0s+vlRWA7GYJEK0ARns7k2sbHY=" crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"
+            integrity="sha256-CJWfUCeP3jLdUMVNUll6yQx37gh9AKmXTRxvRf7jzro=" crossorigin="anonymous"></script>
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .flex-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .col-box {
+            width: 100%;
+            height: 150px;
+            margin: 10px;
+        }
+
+        .res-col {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="twelve columns center">
+            <h3>Choose 3 colors</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="four columns">
+            <label for="color1">Color 1</label>
+            <input class="jscolor" id="color1" value="ab2567">
+        </div>
+        <div class="four columns">
+            <label for="color2">Color 2</label>
+            <input class="jscolor" id="color2" value="F6FF78">
+        </div>
+        <div class="four columns">
+            <label for="color3">Color 3</label>
+            <input class="jscolor" id="color3" value="3CAB4A">
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns center">
+            <h3>See color map (7 colors)</h3>
+        </div>
+    </div>
+    <div class="row flex-container" id="col-container">
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+        console.log("ready!");
+        // initial props
+        let colorCount = 7;
+        let col1 = $('#color1').val();
+        let col2 = $('#color2').val();
+        let col3 = $('#color3').val();
+
+        // Build UI
+        let colContainer = $('#col-container');
+
+        for (let i = 1; i <= colorCount; i++) {
+            console.log(i);
+            colContainer.append('<div class="col-box flex-column">\n' +
+                '            <div class="res-col" id="res-col-' + i + '"></div>\n' +
+                '            <div id="res-hex-' + i + '"></div>\n' +
+                '        </div>')
+        }
+        // Build initial colormap
+        makeColormap(col1, col2, col3);
+
+    });
+
+
+    $('.jscolor').change(function (e) {
+        col1 = $('#color1').val();
+        col2 = $('#color2').val();
+        col3 = $('#color3').val();
+        console.log(col1, col2, col3);
+
+        makeColormap(col1, col2, col3)
+    });
+
+    function makeColormap(col1, col2, col3) {
+        let colormap = chroma.scale([col1, col2, col3])
+            .mode('lch').colors(7);
+        console.log(colormap);
+
+        for (let i = 1; i <= 7; i++) {
+            // console.log(i);
+            $('#res-col-' + i).css("background-color", colormap[i - 1]);
+            $('#res-hex-' + i).html(colormap[i - 1]);
+        }
+    }
+</script>
+
+</body>
+</html>
